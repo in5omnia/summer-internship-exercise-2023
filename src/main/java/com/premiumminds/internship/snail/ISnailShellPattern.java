@@ -15,4 +15,3 @@ interface ISnailShellPattern {
   public Future<int[]> getSnailShell(int[][] matrix);
 }
 
-////testiiiing
