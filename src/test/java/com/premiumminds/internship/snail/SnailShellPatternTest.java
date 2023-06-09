@@ -63,6 +63,16 @@ public class SnailShellPatternTest {
   }
 
   @Test
+  public void ScreenLockinPatternTestFirst2Length2Test()
+          throws InterruptedException, ExecutionException, TimeoutException {
+    int[][] matrix = {{1, 2}, {4, 3}};
+    Future<int[]> count = new SnailShellPattern().getSnailShell(matrix);
+    int[] result = count.get(10, TimeUnit.SECONDS);
+    int[] expected = { 1, 2, 3, 4};
+    assertArrayEquals(result, expected);
+  }
+
+  @Test
   public void ScreenLockinPatternTestFirst0Length2Test()
           throws InterruptedException, ExecutionException, TimeoutException {
     int[][] matrix = {{}};

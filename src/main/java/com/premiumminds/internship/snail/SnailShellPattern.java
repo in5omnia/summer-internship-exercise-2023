@@ -25,114 +25,65 @@ class SnailShellPattern implements ISnailShellPattern {
       @Override
       public int[] call() throws Exception {
 
-        int col, row, index=0, startCol = 0, startRow = 0, N = matrix[0].length, lastRow = N-1, lastCol = N-1;
-        boolean NIsEven = (N % 2 == 0);
-        //empty matrix 0x0
-        if (N == 0){
-          return new int[]{};
-        }
-        //matrix 1x1
-        if (N == 1){
-          return new int[]{matrix[0][0]};
-        }
-        int[] res = new int[N*N];
-        while (startCol!=lastCol && startRow!=lastRow){
-
-          if (NIsEven && startRow != 0){
-            --lastRow;
-            //get first Col inverted
-            row = lastRow;
-            while (row >= startRow){
-              res[index] = matrix[row][startCol];
-              --row;
-              ++index;
-            }
-            ++startCol;
+          int col, row, index=0, startCol = 0, startRow = 0, N = matrix[0].length, lastRow = N-1, lastCol = N-1;
+          boolean NIsEven = (N % 2 == 0);
+          //empty matrix 0x0
+          if (N == 0){
+            return new int[]{};
           }
-          //get first Row
-          col = startCol;
-          while (col <= lastCol){
-            res[index] = matrix[startRow][col];
-            ++col;
-            ++index;
+          //matrix 1x1
+          if (N == 1){
+            return new int[]{matrix[0][0]};
           }
-          ++startRow;
+          int[] res = new int[N*N];
 
-          // get last Col
-          row = startRow;
-          while (row <= lastRow){
-            res[index] = matrix[row][lastCol];
-            ++row;
-            ++index;
-          }
-          --lastCol;
+          while (startCol!=lastCol && startRow!=lastRow){
 
-          //get last Row inverted
-          col = lastCol;
-          while (col >= startCol){
-            res[index] = matrix[lastRow][col];
-            --col;
-            ++index;
+              if (NIsEven && startRow != 0){
+                  --lastRow;
+                  //get first Col inverted
+                  for (row = lastRow; row >= startRow; row--, index++){
+                    res[index] = matrix[row][startCol];
+                  }
+                  ++startCol;
+              }
+              //get first Row
+              for (col = startCol; col <= lastCol; col++, index++){
+                  res[index] = matrix[startRow][col];
+              }
+              ++startRow;
+
+              // get last Col
+              for (row = startRow; row <= lastRow; row++, index++){
+                  res[index] = matrix[row][lastCol];
+              }
+              --lastCol;
+
+              //get last Row inverted
+              for (col = lastCol; col >= startCol; col--, index++){
+                  res[index] = matrix[lastRow][col];
+              }
+              if (!NIsEven){
+                  --lastRow;
+                  //get first Col inverted
+                  for (row = lastRow; row >= startRow; row--, index++){
+                      res[index] = matrix[row][startCol];
+                  }
+                  ++startCol;
+              }
+
           }
           if (!NIsEven){
-            --lastRow;
-            //get first Col inverted
-            row = lastRow;
-            while (row >= startRow){
-              res[index] = matrix[row][startCol];
-              --row;
-              ++index;
-            }
-            ++startCol;
+              res[index] = matrix[startRow][startCol];
           }
-
-        }
-        if (!NIsEven){
-          res[index] = matrix[startRow][startCol];
-        }
-        return res;
+          return res;
       }
     };
     //create future variable
     Future<int[]> future = executorService.submit(callable);
-
-    //wait for result
-    /*while (!future.isDone()){
-      try{
-        Thread.sleep(100);
-      } catch (InterruptedException e){
-        e.printStackTrace();
-      }
-    }*/
     //return future
     return future;
   }
 
 }
-
-
-
-
-
-/// myInterface r = new myInterface() {
-//public void run()
-//{System.out.println("Hello");};
-//  };
-//r.run();
-
-// vs
-
-//class Local {   //local class
-//void fun()
-//  { System.out.println("Hello"); }
-//}
-//new Local().fun();
-
-//vs
-
-//myInterface r = () ->          //Lambda expression
-//{
-//System.out.println("Hello");
-//};
-//r.run();
 
