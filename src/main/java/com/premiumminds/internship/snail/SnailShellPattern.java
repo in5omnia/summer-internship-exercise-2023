@@ -26,7 +26,6 @@ class SnailShellPattern implements ISnailShellPattern {
       public int[] call() throws Exception {
 
           int col, row, N = matrix[0].length;
-          boolean NIsEven = (N % 2 == 0);
           //empty matrix 0x0
           if (N == 0) return new int[0];
           //matrix 1x1
