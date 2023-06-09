@@ -25,62 +25,43 @@ class SnailShellPattern implements ISnailShellPattern {
       @Override
       public int[] call() throws Exception {
 
-          int col, row, index=0, startCol = 0, startRow = 0, N = matrix[0].length, lastRow = N-1, lastCol = N-1;
+          int col, row, N = matrix[0].length;
           boolean NIsEven = (N % 2 == 0);
           //empty matrix 0x0
-          if (N == 0){
-            return new int[]{};
-          }
+          if (N == 0) return new int[0];
           //matrix 1x1
-          if (N == 1){
-            return new int[]{matrix[0][0]};
-          }
+          if (N == 1) return new int[]{matrix[0][0]};
+
+
           int[] res = new int[N*N];
+          int index = 0, startPos = 0, lastPos = N-1;   // because always startRow = startCol and lastRow = lastCol
 
-          while (startCol!=lastCol && startRow!=lastRow){
+          while (startPos < lastPos){
 
-              if (NIsEven && startRow != 0){
-                  --lastRow;
-                  //get first Col inverted
-                  for (row = lastRow; row >= startRow; row--, index++){
-                    res[index] = matrix[row][startCol];
-                  }
-                  ++startCol;
-              }
               //get first Row
-              for (col = startCol; col <= lastCol; col++, index++){
-                  res[index] = matrix[startRow][col];
-              }
-              ++startRow;
+              for (col = startPos; col <= lastPos - 1; col++, index++) res[index] = matrix[startPos][col];
 
               // get last Col
-              for (row = startRow; row <= lastRow; row++, index++){
-                  res[index] = matrix[row][lastCol];
-              }
-              --lastCol;
+              for (row = startPos; row <= lastPos - 1; row++, index++) res[index] = matrix[row][lastPos];
 
               //get last Row inverted
-              for (col = lastCol; col >= startCol; col--, index++){
-                  res[index] = matrix[lastRow][col];
-              }
-              if (!NIsEven){
-                  --lastRow;
-                  //get first Col inverted
-                  for (row = lastRow; row >= startRow; row--, index++){
-                      res[index] = matrix[row][startCol];
-                  }
-                  ++startCol;
-              }
+              for (col = lastPos; col >= startPos + 1; col--, index++) res[index] = matrix[lastPos][col];
+
+              //get first Col inverted
+              for (row = lastPos; row >= startPos + 1; row--, index++) res[index] = matrix[row][startPos];
+
+              ++startPos;
+              --lastPos;
+
 
           }
-          if (!NIsEven){
-              res[index] = matrix[startRow][startCol];
-          }
+          if (!(N % 2 == 0)) res[index] = matrix[startPos][startPos];   // if N isn't an even number
           return res;
       }
     };
     //create future variable
     Future<int[]> future = executorService.submit(callable);
+
     //return future
     return future;
   }
